@@ -17,4 +17,6 @@ public class HomeController {
     public String login() {
         return "login"; // O "public/login" si él metió el login.html a la carpeta public
     }
+
+
 }
