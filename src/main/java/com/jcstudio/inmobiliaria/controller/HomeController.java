@@ -6,8 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+
+
     @GetMapping("/")
     public String inicio() {
-        return "/login"; // Buscará en templates/public/index.html
+        return "/public/index"; // Buscará en templates/public/index.html
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // O "public/login" si él metió el login.html a la carpeta public
     }
 }
