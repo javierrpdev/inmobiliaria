@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar archivos de configuración local
+application-local.properties
+.env
+# Ignorar carpetas de configuración de IDEs
+.idea/
+.DS_Store
