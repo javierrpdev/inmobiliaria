@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Historial de Sesiones</title>
+</head>
+<body>
+<h2>Sesiones registradas</h2>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Usuario</th>
+    <th>Fecha Inicio</th>
+    <th>Estado</th>
+  </tr>
+  </thead>
+  <tbody id="tablaSesiones">
+  </tbody>
+</table>
+
+<script>
+  async function cargarSesiones() {
+    const res = await fetch('/api/sesiones'); // Tu futuro endpoint GET
+    const sesiones = await res.json();
+    const tabla = document.getElementById('tablaSesiones');
+
+    sesiones.forEach(s => {
+      tabla.innerHTML += `<tr>
+                    <td>${s.sesId}</td>
+                    <td>${s.usuario.nombre}</td>
+                    <td>${s.fechaInicio}</td>
+                    <td>${s.estado}</td>
+                </tr>`;
+    });
+  }
+  cargarSesiones();
+</script>
+</body>
+</html>

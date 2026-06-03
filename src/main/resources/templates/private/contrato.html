@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Nuevo Contrato</h2>
+<form id="contratoForm">
+  <input type="number" id="clienteId" placeholder="ID Cliente" required>
+  <input type="number" id="propiedadId" placeholder="ID Propiedad" required>
+  <input type="number" id="monto" placeholder="Monto Total" required>
+  <button type="submit">Guardar Contrato</button>
+</form>
+
+<script>
+  document.getElementById('contratoForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      cliente: { contId: document.getElementById('clienteId').value },
+      propiedad: { propId: document.getElementById('propiedadId').value },
+      montoTotal: document.getElementById('monto').value
+    };
+
+    const response = await fetch('/api/contratos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if(response.ok) alert("Contrato guardado con éxito");
+  });
+</script>
+</body>
+</html>
