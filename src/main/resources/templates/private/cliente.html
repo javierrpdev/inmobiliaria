@@ -28,14 +28,13 @@
         <thead class="table-dark">
         <tr>
           <th>ID</th>
-          <th>Dirección</th>
-          <th>Superficie</th>
-          <th>Precio</th>
-          <th>IVA</th>
-          <th>Estado</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Acciones</th>
         </tr>
         </thead>
-        <tbody id="tabla-propiedades">
+        <tbody id="tabla-clientes">
         </tbody>
       </table>
     </main>
@@ -44,37 +43,34 @@
 
 <script>
   // Función para obtener y mostrar los datos
-  async function cargarPropiedades() {
+  async function cargarClientes() {
     try {
-      const respuesta = await fetch('http://localhost:8080/api/propiedades');
+      const respuesta = await fetch('http://localhost:8080/api/clientes');
       const datos = await respuesta.json();
 
-      const cuerpoTabla = document.getElementById('tabla-propiedades');
-      cuerpoTabla.innerHTML = ''; // Limpiar antes de llenar
+      const cuerpoTabla = document.getElementById('tabla-clientes');
+      cuerpoTabla.innerHTML = '';
 
-      if (datos.length === 0) {
-        cuerpoTabla.innerHTML = '<tr><td colspan="3" class="text-center">No hay propiedades registradas</td></tr>';
-        return;
-      }
-
-      datos.forEach(propiedad => {
-        const fila = `<tr><td>${propiedad.propId}</td>
-  <td>${propiedad.direccion}</td>
-  <td>${propiedad.superficie} m²</td>
-<td>$${propiedad.precio.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
-<td>$${propiedad.precioConIva.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
-  <td>${propiedad.estado}</td>
-        </tr>`;
+      datos.forEach(cliente => {
+        const fila = `<tr>
+        <td>${cliente.clienteId}</td>
+        <td>${cliente.nombre}</td>
+        <td>${cliente.apPaterno}</td>
+        <td>${cliente.email}</td>
+        <td>
+          <button class="btn btn-sm btn-warning">Editar</button>
+        </td>
+      </tr>`;
         cuerpoTabla.innerHTML += fila;
       });
     } catch (error) {
-      console.error('Error al cargar propiedades:', error);
-      alert('Hubo un error al conectar con el servidor');
+      console.error('Error al cargar clientes:', error);
+      alert('Error al cargar la lista de clientes');
     }
   }
 
-  // Llamar a la función al cargar la página
-  document.addEventListener('DOMContentLoaded', cargarPropiedades);
+
+  document.addEventListener('DOMContentLoaded', cargarClientes);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
