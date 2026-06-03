@@ -3,69 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Clientes</title>
+  <title>Gestión de Propiedades</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container-fluid">
   <div class="row">
-    <nav class="col-md-2 bg-light vh-100 p-3">
+    <nav class="col-md-2 bg-light vh-100 p-3 border-end">
       <h5>Menú</h5>
       <ul class="nav flex-column">
-        <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Propiedades</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Reportes</a></li>
       </ul>
     </nav>
 
     <main class="col-md-10 p-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Clientes</h1>
-        <button id="btn-nuevo" class="btn btn-primary d-none">Nuevo Cliente</button>
+        <h1>Propiedades</h1>
+        <button id="btn-nuevo" class="btn btn-primary">Nueva Propiedad</button>
       </div>
 
-
-      <div class="row mb-3 align-items-end">
-        <div class="col-md-3">
-          <label class="form-label">Tipo de Contrato</label>
-          <select class="form-select" id="filtroTipo">
-            <option value="todos">Todos</option>
-            <option value="Renta">Renta</option>
-            <option value="Venta">Venta</option>
-            <option value="Rentado">Rentado</option>
-            <option value="Comprado">Cmprado</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Buscar nombre</label>
-          <input type="text" class="form-control" placeholder="Ej. Juan Pérez">
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-secondary w-100">Filtrar</button>
-        </div>
-      </div>
-
-      <table class="table table-striped">
-        <thead>
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
         <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>Saldo</th>
-          <th id="th-acciones" class="d-none">Acciones</th>
+          <th>ID Propiedad</th>
+          <th>Superficie (m²)</th>
+          <th>Acciones</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>1</td>
-          <td>Javier Ruiz</td>
-          <td>javier@example.com</td>
-          <td>$500.00</td>
-          <td class="td-acciones d-none">
-            <button class="btn btn-sm btn-warning">Editar</button>
-            <button class="btn btn-sm btn-danger">Eliminar</button>
-          </td>
-        </tr>
+        <tbody id="tabla-propiedades">
         </tbody>
       </table>
     </main>
@@ -73,22 +40,39 @@
 </div>
 
 <script>
-  // Esto lo obtendrás de tu base de datos o token de sesión al loguearte
-  const userRole = 'admin'; // Cambia a 'escritura' o 'consulta' para probar
+  // Función para obtener y mostrar los datos
+  async function cargarPropiedades() {
+    try {
+      const respuesta = await fetch('http://localhost:8080/api/propiedades');
+      const datos = await respuesta.json();
 
-  const btnNuevo = document.getElementById('btn-nuevo');
-  const thAcciones = document.getElementById('th-acciones');
-  const tdAcciones = document.querySelectorAll('.td-acciones');
+      const cuerpoTabla = document.getElementById('tabla-propiedades');
+      cuerpoTabla.innerHTML = ''; // Limpiar antes de llenar
 
-  if (userRole === 'admin') {
-    btnNuevo.classList.remove('d-none');
-    thAcciones.classList.remove('d-none');
-    tdAcciones.forEach(el => el.classList.remove('d-none'));
-  } else if (userRole === 'escritura') {
-    btnNuevo.classList.remove('d-none');
-    // El admin puede eliminar, pero el de escritura solo edita
+      if (datos.length === 0) {
+        cuerpoTabla.innerHTML = '<tr><td colspan="3" class="text-center">No hay propiedades registradas</td></tr>';
+        return;
+      }
+
+      datos.forEach(propiedad => {
+        const fila = `<tr>
+          <td>${propiedad.propId}</td>
+          <td>${propiedad.superficie} m²</td>
+          <td>
+            <button class="btn btn-sm btn-warning">Editar</button>
+            <button class="btn btn-sm btn-danger">Eliminar</button>
+          </td>
+        </tr>`;
+        cuerpoTabla.innerHTML += fila;
+      });
+    } catch (error) {
+      console.error('Error al cargar propiedades:', error);
+      alert('Hubo un error al conectar con el servidor');
+    }
   }
-  // Si es 'consulta', no se quita el 'd-none', así que los botones siguen ocultos.
+
+  // Llamar a la función al cargar la página
+  document.addEventListener('DOMContentLoaded', cargarPropiedades);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
